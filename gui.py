@@ -254,6 +254,10 @@ class RSASignatureApp:
             private_key_path = self.private_key_path.get()
             public_key_path = self.public_key_path.get()
             
+            if (private_key_path == "" or public_key_path == ""):
+                messagebox.showerror("Lỗi", "Cần chọn file khóa riêng tư và công khai trước khi tải khóa")
+                return
+
             if private_key_path:
                 self.private_key = load_private_key(private_key_path)
             
