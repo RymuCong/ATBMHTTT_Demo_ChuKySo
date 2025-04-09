@@ -80,16 +80,31 @@ def calculate_data_hash(data):
     return hash_obj.digest()
 
 def sign_data(private_key, data):
-    """Tạo chữ ký số cho dữ liệu"""
+    """
+    Tạo chữ ký số cho dữ liệu sử dụng khóa riêng tư RSA
+    
+    Tham số:
+        private_key: Khóa RSA riêng tư
+        data: Dữ liệu cần ký (dạng chuỗi hoặc bytes)
+        
+    Trả về:
+        bytes: Chữ ký số
+    """
+    # Chuyển đổi chuỗi thành bytes nếu cần
     if isinstance(data, str):
         data = data.encode('utf-8')
     
+    # Tạo chữ ký sử dụng thuật toán PSS
     signature = private_key.sign(
         data,
+        # Sử dụng PSS (Probabilistic Signature Scheme)
         padding.PSS(
+            # MGF1 (Mask Generation Function 1) với SHA-256
             mgf=padding.MGF1(hashes.SHA256()),
+            # Sử dụng độ dài salt tối đa để tăng tính bảo mật
             salt_length=padding.PSS.MAX_LENGTH
         ),
+        # Sử dụng hàm băm SHA-256
         hashes.SHA256()
     )
     
@@ -101,22 +116,37 @@ def sign_file(private_key, file_path):
     return sign_data(private_key, file_hash)
 
 def verify_signature(public_key, data, signature):
-    """Xác thực chữ ký số cho dữ liệu"""
+    """
+    Xác thực chữ ký số cho dữ liệu sử dụng khóa công khai RSA
+    
+    Tham số:
+        public_key: Khóa RSA công khai
+        data: Dữ liệu cần xác thực (chuỗi hoặc bytes)
+        signature: Chữ ký số cần kiểm tra
+        
+    Trả về:
+        bool: True nếu chữ ký hợp lệ, False nếu không hợp lệ
+    """
+    # Chuyển đổi chuỗi thành bytes nếu cần
     if isinstance(data, str):
         data = data.encode('utf-8')
     
     try:
+        # Xác thực chữ ký
         public_key.verify(
             signature,
             data,
+            # Sử dụng cùng phương pháp đệm PSS như khi ký
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
             ),
             hashes.SHA256()
         )
+        # Nếu không có ngoại lệ, chữ ký hợp lệ
         return True
     except InvalidSignature:
+        # Nếu xảy ra ngoại lệ InvalidSignature, chữ ký không hợp lệ
         return False
 
 def verify_file_signature(public_key, file_path, signature):
