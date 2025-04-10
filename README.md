@@ -9,18 +9,31 @@
 - Ký số cho file (hình ảnh, văn bản, ...)
 - Xác thực tính toàn vẹn của dữ liệu bằng chữ ký số
 - Giao diện đồ họa trực quan, dễ sử dụng
+- Đo lường hiệu suất của quá trình ký và xác thực với các loại dữ liệu khác nhau
 
 ## Cài đặt
 
 ### Yêu cầu
 
 - Python 3.8 trở lên
-- Các thư viện Python: cryptography, Pillow, tkinter
+- Các thư viện Python: cryptography, Pillow, tkinter, matplotlib, psutil
 
 ### Cài đặt các thư viện cần thiết
 
 ```bash
 pip install cryptography Pillow
+```
+
+### Các thư viện bổ sung
+
+```bash
+pip install matplotlib psutil
+```
+
+Hoặc cài đặt tất cả thư viện cần thiết với một lệnh:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ### Tkinter
@@ -86,3 +99,24 @@ Tkinter thường được cài đặt mặc định với Python. Nếu chưa c
 - `keys/`: Lưu trữ các khóa RSA
 - `signatures/`: Lưu trữ các chữ ký số
 - `temp/`: Thư mục tạm thời cho xử lý dữ liệu 
+
+## Đo lường hiệu suất
+
+Ứng dụng bao gồm một tính năng đo lường hiệu suất cho phép so sánh thời gian xử lý trong các trường hợp khác nhau:
+
+1. Chạy chương trình đo lường:
+   ```bash
+   python performance_test.py
+   ```
+
+2. Chương trình sẽ thực hiện các phép đo:
+   - **Đo hiệu suất với dữ liệu văn bản**: Đo thời gian ký và xác thực với các văn bản có kích thước khác nhau (1KB đến 1000KB)
+   - **Đo hiệu suất với dữ liệu hình ảnh**: Đo thời gian ký và xác thực các file ảnh có kích thước khác nhau
+   - **Đo hiệu suất với các kích thước khóa khác nhau**: So sánh thời gian tạo khóa, ký và xác thực với các khóa có độ dài 1024, 2048, 3072 và 4096 bit
+
+3. Kết quả được hiển thị dưới dạng:
+   - Biểu đồ so sánh (lưu dưới dạng PNG)
+   - Dữ liệu thời gian chi tiết in ra màn hình
+   - Thông tin về cấu hình hệ thống đo lường
+
+Thư mục `test_images/` chứa các hình ảnh mẫu được sử dụng trong quá trình đo lường. 
