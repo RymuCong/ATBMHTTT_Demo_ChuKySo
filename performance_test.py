@@ -79,7 +79,8 @@ def test_image_data_performance():
     image_files = [
         "test_images/small.png",    # ~100KB
         "test_images/medium.png",   # ~1MB
-        "test_images/large.png"     # ~5MB
+        "test_images/large.png",     # ~5MB
+        "test_images/super-large.jpg" # ~10MB
     ]
     
     signing_times = []
